@@ -1,6 +1,8 @@
 package com.example.liveapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
       if (savedInstanceState == null) {
-          getSupportFragmentManager().beginTransaction()
-                  .replace(R.id.container, HomeFragment.newInstance())
-                  .commitNow();
+           Fragment fragment = HomeFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment, "home_fragment");
+        transaction.commit();
       }
 
     }

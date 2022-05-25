@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements UserAdapter.ItemClickListener {
     private View view;
     private final List<UserModel> userModels = new ArrayList<>();
     private UserAdapter userAdapter;
@@ -55,10 +56,9 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     private void initView() {
         recyclerView = view.findViewById(R.id.recyclerView);
-        userAdapter = new UserAdapter(userModels, getContext());
+        userAdapter = new UserAdapter(userModels, getContext(), this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(userAdapter);
@@ -67,10 +67,23 @@ public class HomeFragment extends Fragment {
     private void initObserve() {
         viewModel.getUserModel();
         viewModel.getLiveDate().observe(getViewLifecycleOwner(), userModels1 -> {
-            if (userModels1 != null){
+            if (userModels1 != null) {
                 userAdapter.addItems(userModels1);
             }
         });
     }
 
+
+    @Override
+    public void onItemClick(UserModel userModel) {
+        Fragment fragment = FullFragment.newInstance(userModel.getStrCategory(), userModel.getStrCategoryThumb());
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment, "full_fragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
 }
+

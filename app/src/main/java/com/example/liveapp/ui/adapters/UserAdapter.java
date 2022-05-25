@@ -19,10 +19,13 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<UserModel> userModels;
     private Context context;
+    private ItemClickListener clickListener;
 
-    public UserAdapter(List<UserModel> userModels, Context context) {
+    public UserAdapter(List<UserModel> userModels, Context context, ItemClickListener clickListener) {
         this.userModels = userModels;
         this.context = context;
+        this.clickListener = clickListener;
+
     }
 
     public void addItems(List<UserModel> userModels1) {
@@ -49,6 +52,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 .load(userModels.get(position).getStrCategoryThumb())
                 .into(holder.imageView);
 
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onItemClick(userModels.get(position));
+            }
+        });
     }
 
     @Override
@@ -65,5 +75,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             imageView = itemView.findViewById(R.id.imageView);
 
         }
+
+    }
+
+    public interface ItemClickListener {
+        public void onItemClick(UserModel userModel);
     }
 }
